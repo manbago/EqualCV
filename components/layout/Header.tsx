@@ -10,7 +10,7 @@ export function Header() {
                         <ShieldCheck className="h-5 w-5 text-white" />
                     </div>
                     <span className="text-lg font-bold tracking-tight text-slate-900">
-                        Anonim<span className="text-blue-600 animate-cursor-blink font-extrabold">|</span>CV
+                        Equa<span className="text-blue-600 animate-cursor-blink font-extrabold">|</span>CV
                     </span>
                 </div>
 

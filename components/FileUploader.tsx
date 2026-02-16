@@ -70,19 +70,16 @@ export default function FileUploader({ onFileSelect, selectedFile, onClear }: Fi
                     <UploadCloud className={`${isDragActive ? "animate-bounce" : ""}`} size={30} />
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-2">
                     <p className="text-lg font-bold text-slate-800">
-                        {isDragActive ? 'Suelta el archivo aquí' : 'Cargar CV en PDF'}
+                        {isDragActive ? 'Suelta el archivo aquí' : 'Arrastra y suelta tu CV en PDF aquí'}
                     </p>
                     <p className="text-sm text-slate-500 max-w-[280px] mx-auto">
-                        Arrastra y suelta tu archivo o haz clic para buscar en tu dispositivo
+                        o haz clic para seleccionar
                     </p>
                 </div>
 
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-400 shadow-sm mt-2">
-                    <FileText size={14} className="text-red-400" />
-                    CV_Candidato.pdf
-                </div>
+
             </div>
         </div>
     );

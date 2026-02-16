@@ -73,33 +73,6 @@ export async function analyzePdf(file: File): Promise<{ textItems: TextItem[], p
     return { textItems, pages };
 }
 
-export function findMatches(textItems: TextItem[], keywords: string[]): BoundingBox[] {
-    const matches: BoundingBox[] = [];
-    if (keywords.length === 0) return matches;
-
-    const normalizedKeywords = keywords.map(k => k.toLowerCase().trim()).filter(k => k);
-
-    textItems.forEach(item => {
-        const str = item.str.toLowerCase();
-        for (const kw of normalizedKeywords) {
-            if (str.includes(kw)) {
-                matches.push({
-                    x: item.x,
-                    y: item.y,
-                    width: item.width,
-                    height: item.height,
-                    pageIndex: item.pageIndex,
-                    type: 'text',
-                    text: item.str
-                });
-                break; // Only match once per item
-            }
-        }
-    });
-
-    return matches;
-}
-
 export async function generateAnonymizedPDF(
     originalFile: File,
     redactions: BoundingBox[],
@@ -233,10 +206,18 @@ export async function generateAnonymizedPDF(
 
         newPage.drawText("CV Anonimizado", {
             x: 200,
-            y: newPageHeight - 40,
+            y: newPageHeight - 35,
             size: 18,
-            font: helveticaFont,
+            font: helveticaBold,
             color: rgb(0.2, 0.2, 0.2)
+        });
+
+        newPage.drawText("Candidata/o en proceso de selección", {
+            x: 200,
+            y: newPageHeight - 55,
+            size: 11,
+            font: helveticaFont,
+            color: rgb(0.5, 0.5, 0.5)
         });
 
         // Logo Placeholder

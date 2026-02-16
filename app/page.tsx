@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FileUploader from "@/components/FileUploader";
 import PDFViewer from "@/components/PDFViewer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { analyzePdf, findMatches, generateAnonymizedPDF, TextItem, PageInfo, BoundingBox } from "@/lib/pdf-helper";
+import { analyzePdf, generateAnonymizedPDF, TextItem, PageInfo, BoundingBox } from "@/lib/pdf-helper";
 import { Loader2, Download, CheckCircle, ArrowRight, ShieldCheck, FileText, X } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,7 @@ export default function Home() {
 
     // Redaction State
     const [redactions, setRedactions] = useState<BoundingBox[]>([]);
-    const [keywords, setKeywords] = useState<string>("");
+
     const [initials, setInitials] = useState<string>("");
 
     // Results
@@ -44,16 +44,7 @@ export default function Home() {
         }
     };
 
-    const handleKeywordSearch = () => {
-        if (!textItems.length) return;
-        const keywordList = keywords.split(",").map(k => k.trim()).filter(k => k);
-        const matches = findMatches(textItems, keywordList);
 
-        setRedactions(prev => {
-            const manuals = prev.filter(r => r.type === 'image-manual');
-            return [...manuals, ...matches];
-        });
-    };
 
     const handleProcess = async () => {
         if (!file) return;
@@ -90,7 +81,7 @@ export default function Home() {
             <Header />
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 w-full relative">
+            <div className="flex-1 flex flex-col items-center justify-center pt-0 pb-12 px-4 w-full relative">
 
                 {/* Background Gradients */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
@@ -101,8 +92,8 @@ export default function Home() {
                 {/* Hero Section */}
                 {step === "upload" && (
                     <div className="text-center mb-10 max-w-3xl space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-                        <Badge variant="secondary" className="mb-2">v1.1.9 Private Beta</Badge>
-                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 text-balance">Anonimización de CVs <br /><span className="text-blue-600">Profesional y Segura</span></h1>
+                        <Badge variant="secondary" className="mb-8 block w-fit mx-auto">v1.1.9 Private Beta</Badge>
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 text-balance">Anonimización de CVs <br /><span className="text-blue-600">Profesional y Segura</span></h1>
                         <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed text-balance">
                             Elimina sesgos en tus procesos de selección. Nuestra herramienta procesa documentos en tu dispositivo, garantizando máxima privacidad.
                         </p>
@@ -116,8 +107,8 @@ export default function Home() {
                         {step === "upload" && (
                             <>
                                 <CardHeader>
-                                    <CardTitle>Subir Documento</CardTitle>
-                                    <CardDescription>Formatos soportados: PDF (Máx 10MB)</CardDescription>
+                                    <CardTitle className="font-medium">Subir Documento</CardTitle>
+                                    <CardDescription className="font-normal text-slate-400">Formatos soportados: PDF (Máx 10MB)</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-6">
                                     <FileUploader onFileSelect={handleFileSelect} />
@@ -166,20 +157,7 @@ export default function Home() {
                                         </p>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-slate-700">Censura Automática:</label>
-                                        <div className="flex gap-2">
-                                            <Input
-                                                placeholder="Ej: Nombre, Empresa"
-                                                className="bg-white"
-                                                value={keywords}
-                                                onChange={(e) => setKeywords(e.target.value)}
-                                            />
-                                            <Button onClick={handleKeywordSearch} variant="secondary" size="sm">
-                                                Buscar
-                                            </Button>
-                                        </div>
-                                    </div>
+
 
                                     <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-lg text-sm text-blue-800 space-y-2">
                                         <p className="font-semibold flex items-center gap-2">
@@ -226,7 +204,7 @@ export default function Home() {
                         {step === "processing" && (
                             <div className="flex flex-col items-center justify-center p-12 space-y-4">
                                 <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
-                                <h3 className="text-xl font-medium text-slate-900">Aplicando censura...</h3>
+                                <h3 className="text-xl font-medium text-slate-900">Aplicando anonimización...</h3>
                                 <p className="text-slate-500">Generando nuevo PDF seguro</p>
                             </div>
                         )}
@@ -259,7 +237,7 @@ export default function Home() {
             {/* Footer */}
             <footer className="py-8 border-t border-slate-200 bg-white">
                 <div className="container max-w-6xl mx-auto px-4 text-center text-sm text-slate-500">
-                    © 2026 EquaCV. Todos los derechos reservados.
+                    © 2026 EqualCV. Todos los derechos reservados.
                 </div>
             </footer>
         </main>
