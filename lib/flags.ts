@@ -7,4 +7,11 @@ export const new_showPhotoStatus = flag({
     },
 });
 
+export const showGenericLogo = flag({
+    key: 'showGenericLogo',
+    decide: () => {
+        return false;
+    },
+});
+
 

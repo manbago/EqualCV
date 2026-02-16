@@ -13,9 +13,10 @@ import { Badge } from "@/components/ui/badge";
 
 interface HomeClientProps {
     new_showPhotoStatus: boolean;
+    showGenericLogo: boolean;
 }
 
-export default function HomeClient({ new_showPhotoStatus }: HomeClientProps) {
+export default function HomeClient({ new_showPhotoStatus, showGenericLogo }: HomeClientProps) {
     const [file, setFile] = useState<File | null>(null);
     const [step, setStep] = useState<"upload" | "analyzing" | "review" | "processing" | "done">("upload");
 
@@ -54,7 +55,7 @@ export default function HomeClient({ new_showPhotoStatus }: HomeClientProps) {
         await new Promise(r => setTimeout(r, 800)); // Slight delay for UX
 
         try {
-            const pdfBytes = await generateAnonymizedPDF(file, redactions, initials, true);
+            const pdfBytes = await generateAnonymizedPDF(file, redactions, initials, showGenericLogo);
             setFinalPdf(pdfBytes);
             setStep("done");
         } catch (error) {
