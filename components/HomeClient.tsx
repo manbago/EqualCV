@@ -12,10 +12,10 @@ import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
 
 interface HomeClientProps {
-    showGenericLogo: boolean;
+    new_showPhotoStatus: boolean;
 }
 
-export default function HomeClient({ showGenericLogo }: HomeClientProps) {
+export default function HomeClient({ new_showPhotoStatus }: HomeClientProps) {
     const [file, setFile] = useState<File | null>(null);
     const [step, setStep] = useState<"upload" | "analyzing" | "review" | "processing" | "done">("upload");
 
@@ -54,7 +54,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
         await new Promise(r => setTimeout(r, 800)); // Slight delay for UX
 
         try {
-            const pdfBytes = await generateAnonymizedPDF(file, redactions, initials, showGenericLogo);
+            const pdfBytes = await generateAnonymizedPDF(file, redactions, initials, true);
             setFinalPdf(pdfBytes);
             setStep("done");
         } catch (error) {

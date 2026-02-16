@@ -1,8 +1,8 @@
 import HomeClient from "@/components/HomeClient";
-import { showGenericLogo } from "@/lib/flags";
+import { new_showPhotoStatus } from "@/lib/flags";
 
 export default async function Home() {
-    const isGenericLogoEnabled = await showGenericLogo();
+    const isPhotoStatusEnabled = await new_showPhotoStatus();
 
-    return <HomeClient showGenericLogo={isGenericLogoEnabled} />;
+    return <HomeClient new_showPhotoStatus={isPhotoStatusEnabled} />;
 }
