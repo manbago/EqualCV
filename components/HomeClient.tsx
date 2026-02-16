@@ -134,7 +134,7 @@ export default function HomeClient({ new_showPhotoStatus, showGenericLogo }: Hom
 
                         {/* REVIEW STEP */}
                         {step === "review" && (
-                            <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-0 h-full overflow-hidden">
+                            <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-0 min-h-[700px] h-[calc(100vh-220px)] overflow-hidden border border-slate-200 rounded-xl">
                                 {/* Side Controls */}
                                 <div className="lg:col-span-1 border-r border-slate-100 p-6 flex flex-col space-y-6 overflow-y-auto bg-slate-50/30">
                                     <div className="space-y-1">
@@ -181,7 +181,7 @@ export default function HomeClient({ new_showPhotoStatus, showGenericLogo }: Hom
                                 </div>
 
                                 {/* PDF Viewer Area */}
-                                <div className="lg:col-span-3 h-full bg-slate-200/50 relative">
+                                <div className="lg:col-span-3 h-full bg-slate-200/50 relative overflow-hidden">
                                     <PDFViewer
                                         file={file}
                                         initialTextItems={textItems}

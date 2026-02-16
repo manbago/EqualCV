@@ -117,7 +117,7 @@ export default function PDFViewer({ file, initialTextItems, pages, onRedactionCh
     };
 
     return (
-        <div className="flex flex-col items-center gap-8 w-full bg-gray-100 p-8 overflow-auto max-h-[80vh]" ref={containerRef}>
+        <div className="flex flex-col items-center gap-8 w-full h-full bg-slate-200/30 p-8 overflow-auto" ref={containerRef}>
             {file && pages.map((page) => (
                 <div key={page.index} className="relative shadow-lg ring-1 ring-black/5 bg-white">
                     <PDFPage
