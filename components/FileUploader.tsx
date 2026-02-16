@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, X } from 'lucide-react';
+import { UploadCloud, FileText, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
@@ -28,18 +28,18 @@ export default function FileUploader({ onFileSelect, selectedFile, onClear }: Fi
 
     if (selectedFile) {
         return (
-            <Card className="p-6 flex items-center justify-between bg-primary/5 border-primary/20">
+            <Card className="p-6 flex items-center justify-between bg-blue-50/30 border-blue-100 shadow-sm transition-all duration-300">
                 <div className="flex items-center gap-4">
-                    <div className="bg-white p-3 rounded-full shadow-sm border border-gray-100">
-                        <FileText className="w-6 h-6 text-primary" />
+                    <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center">
+                        <FileText className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
-                        <p className="font-medium text-gray-900">{selectedFile.name}</p>
-                        <p className="text-sm text-gray-500">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <p className="font-bold text-slate-900 truncate max-w-[200px]">{selectedFile.name}</p>
+                        <p className="text-xs text-slate-500 font-medium">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
                     </div>
                 </div>
                 {onClear && (
-                    <Button variant="ghost" size="icon" onClick={onClear} className="text-gray-400 hover:text-destructive">
+                    <Button variant="ghost" size="icon" onClick={onClear} className="h-10 w-10 text-slate-400 hover:text-red-500 transition-colors">
                         <X className="w-5 h-5" />
                     </Button>
                 )}
@@ -51,26 +51,38 @@ export default function FileUploader({ onFileSelect, selectedFile, onClear }: Fi
         <div
             {...getRootProps()}
             className={`
-                border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-200
-                ${isDragActive ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50 hover:bg-gray-50'}
+                relative overflow-hidden cursor-pointer rounded-2xl border-2 border-dashed transition-all duration-300 p-12 text-center
+                ${isDragActive
+                    ? "border-blue-500 bg-blue-50/50 scale-[1.01]"
+                    : "border-slate-200 bg-slate-50/30 hover:border-blue-400 hover:bg-slate-50 hover:shadow-inner"
+                }
             `}
         >
             <input {...getInputProps()} />
-            <div className="flex flex-col items-center gap-4">
-                <div className={`p-4 rounded-full ${isDragActive ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-400'}`}>
-                    <Upload className="w-8 h-8" />
+
+            {/* Decorative background element */}
+            <div className="absolute -right-10 -bottom-10 text-slate-100/50 rotate-12 transition-transform pointer-events-none">
+                <UploadCloud size={140} />
+            </div>
+
+            <div className="relative flex flex-col items-center gap-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm border border-blue-100 ring-4 ring-blue-50/50">
+                    <UploadCloud className={`${isDragActive ? "animate-bounce" : ""}`} size={30} />
                 </div>
-                <div>
-                    <h3 className="font-semibold text-lg text-gray-900">
-                        {isDragActive ? 'Drop PDF here' : 'Suelta tu CV aquí'}
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                        o haz click para seleccionar (PDF)
+
+                <div className="space-y-1">
+                    <p className="text-lg font-bold text-slate-800">
+                        {isDragActive ? 'Suelta el archivo aquí' : 'Cargar CV en PDF'}
+                    </p>
+                    <p className="text-sm text-slate-500 max-w-[280px] mx-auto">
+                        Arrastra y suelta tu archivo o haz clic para buscar en tu dispositivo
                     </p>
                 </div>
-                <Button variant="outline" className="mt-2">
-                    Seleccionar Archivo
-                </Button>
+
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-400 shadow-sm mt-2">
+                    <FileText size={14} className="text-red-400" />
+                    CV_Candidato.pdf
+                </div>
             </div>
         </div>
     );

@@ -4,10 +4,12 @@ import { useState } from "react";
 import FileUploader from "@/components/FileUploader";
 import PDFViewer from "@/components/PDFViewer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { analyzePdf, findMatches, generateAnonymizedPDF, TextItem, PageInfo, BoundingBox } from "@/lib/pdf-helper";
-import { Loader2, Download, CheckCircle, ArrowRight, ShieldCheck } from "lucide-react";
+import { Loader2, Download, CheckCircle, ArrowRight, ShieldCheck, FileText, X } from "lucide-react";
+import { Header } from "@/components/layout/Header";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
     const [file, setFile] = useState<File | null>(null);
@@ -47,13 +49,8 @@ export default function Home() {
         const keywordList = keywords.split(",").map(k => k.trim()).filter(k => k);
         const matches = findMatches(textItems, keywordList);
 
-        // Merge with existing manual redactions (preserve manual images)
         setRedactions(prev => {
             const manuals = prev.filter(r => r.type === 'image-manual');
-            // Filter out old text matches? Or keep them? 
-            // Ideally we re-run search.
-            // Let's just add new matches that aren't already there?
-            // Simpler: Replace text matches, keep manual.
             return [...manuals, ...matches];
         });
     };
@@ -62,8 +59,7 @@ export default function Home() {
         if (!file) return;
         setStep("processing");
 
-        // Wait a bit for UI update
-        await new Promise(r => setTimeout(r, 500));
+        await new Promise(r => setTimeout(r, 800)); // Slight delay for UX
 
         try {
             const pdfBytes = await generateAnonymizedPDF(file, redactions, initials);
@@ -90,148 +86,182 @@ export default function Home() {
     };
 
     return (
-        <main className="min-h-screen bg-slate-50 flex flex-col font-sans">
-            {/* Header */}
-            <header className="bg-white border-b border-slate-200 py-4 px-6 flex items-center justify-between sticky top-0 z-50">
-                <div className="flex items-center gap-2">
-                    <div className="bg-blue-600 p-1.5 rounded-lg">
-                        <ShieldCheck className="text-white w-5 h-5" />
-                    </div>
-                    <h1 className="text-xl font-bold text-slate-900">AnonimiCV</h1>
-                </div>
-                {step !== "upload" && (
-                    <Button variant="ghost" size="sm" onClick={() => window.location.reload()}>
-                        Nuevo Archivo
-                    </Button>
-                )}
-            </header>
+        <main className="min-h-screen font-sans flex flex-col bg-slate-50/50">
+            <Header />
 
-            <div className="flex-1 container mx-auto p-6 max-w-6xl">
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 w-full relative">
 
-                {/* STATUS BAR */}
-                <div className="mb-8 flex justify-center">
-                    {/* Breadcrumbs or Steps could go here */}
+                {/* Background Gradients */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl" />
+                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-100/40 rounded-full blur-3xl" />
                 </div>
 
-                {/* UPLOAD STEP */}
+                {/* Hero Section */}
                 {step === "upload" && (
-                    <div className="max-w-xl mx-auto mt-12">
-                        <div className="text-center mb-10">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-4">Elimina datos sensibles de tus CVs</h2>
-                            <p className="text-slate-500 text-lg">Procesamiento seguro en tu navegador. Arrastra un PDF para comenzar.</p>
-                        </div>
-                        <Card>
-                            <CardContent className="pt-6">
-                                <FileUploader onFileSelect={handleFileSelect} />
-                            </CardContent>
-                        </Card>
+                    <div className="text-center mb-10 max-w-3xl space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+                        <Badge variant="secondary" className="mb-2">v1.1.9 Private Beta</Badge>
+                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 text-balance">Anonimización de CVs <br /><span className="text-blue-600">Profesional y Segura</span></h1>
+                        <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed text-balance">
+                            Elimina sesgos en tus procesos de selección. Nuestra herramienta procesa documentos en tu dispositivo, garantizando máxima privacidad.
+                        </p>
                     </div>
                 )}
 
-                {/* ANALYZING STEP */}
-                {step === "analyzing" && (
-                    <div className="flex flex-col items-center justify-center h-[50vh]">
-                        <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
-                        <h3 className="text-xl font-medium text-slate-900">Analizando documento...</h3>
-                        <p className="text-slate-500">Detectando texto y estructura</p>
-                    </div>
-                )}
+                <div className={`w-full ${step === "review" ? "max-w-7xl h-[80vh]" : "max-w-xl"} animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200`}>
+                    <Card className="border-slate-200/60 shadow-xl shadow-slate-200/40 overflow-hidden backdrop-blur-sm bg-white/80 h-full flex flex-col">
 
-                {/* REVIEW STEP */}
-                {step === "review" && (
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[80vh]">
-
-                        {/* SIDEBAR CONTROLS */}
-                        <Card className="lg:col-span-1 h-full flex flex-col">
-                            <CardHeader>
-                                <CardTitle>Configuración</CardTitle>
-                                <CardDescription>Define qué datos ocultar</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-6 flex-1 overflow-y-auto">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Iniciales candidata/o:</label>
-                                    <Input
-                                        placeholder="Ej: M,B,C"
-                                        value={initials}
-                                        onChange={(e) => {
-                                            const raw = e.target.value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-                                            const formatted = raw.split('').slice(0, 5).join(',');
-                                            setInitials(formatted);
-                                        }}
-                                    />
-                                    <p className="text-xs text-muted-foreground">
-                                        Aparecerán en la cabecera del PDF: {initials ? initials.split(',').join('.') + '.' : ''}
+                        {/* UPLOAD STEP */}
+                        {step === "upload" && (
+                            <>
+                                <CardHeader>
+                                    <CardTitle>Subir Documento</CardTitle>
+                                    <CardDescription>Formatos soportados: PDF (Máx 10MB)</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    <FileUploader onFileSelect={handleFileSelect} />
+                                </CardContent>
+                                <CardFooter className="bg-slate-50/50 border-t border-slate-100 py-4 justify-center">
+                                    <p className="text-xs text-slate-400 flex items-center gap-1.5">
+                                        <ShieldCheck size={12} /> Tus archivos nunca salen de tu dispositivo
                                     </p>
-                                </div>
+                                </CardFooter>
+                            </>
+                        )}
 
-                                <div className="p-4 bg-blue-50 rounded-lg text-sm text-blue-800 space-y-2">
-                                    <p className="font-medium flex items-center gap-2">
-                                        <ShieldCheck size={14} /> Modo Manual
-                                    </p>
-                                    <ul className="list-disc list-inside space-y-1 text-xs">
-                                        <li>Haz <strong>click</strong> en el texto para ocultarlo/mostrarlo.</li>
-                                        <li><strong>Arrastra</strong> el ratón para crear un área de censura (imágenes).</li>
-                                    </ul>
-                                </div>
+                        {/* ANALYZING STEP */}
+                        {step === "analyzing" && (
+                            <div className="flex flex-col items-center justify-center p-12 space-y-4">
+                                <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
+                                <h3 className="text-xl font-medium text-slate-900">Analizando documento...</h3>
+                                <p className="text-slate-500">Detectando texto y estructura</p>
+                            </div>
+                        )}
 
-                                <div className="pt-4 border-t">
-                                    <div className="flex justify-between text-sm mb-2">
-                                        <span>Elementos a ocultar:</span>
-                                        <span className="font-bold">{redactions.length}</span>
+                        {/* REVIEW STEP */}
+                        {step === "review" && (
+                            <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-0 h-full overflow-hidden">
+                                {/* Side Controls */}
+                                <div className="lg:col-span-1 border-r border-slate-100 p-6 flex flex-col space-y-6 overflow-y-auto bg-slate-50/30">
+                                    <div className="space-y-1">
+                                        <h3 className="text-lg font-bold text-slate-900">Configuración</h3>
+                                        <p className="text-xs text-slate-500">Define qué datos ocultar</p>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-semibold text-slate-700">Iniciales:</label>
+                                        <Input
+                                            placeholder="Ej: M,B,C"
+                                            value={initials}
+                                            className="bg-white"
+                                            onChange={(e) => {
+                                                const raw = e.target.value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+                                                const formatted = raw.split('').slice(0, 5).join(',');
+                                                setInitials(formatted);
+                                            }}
+                                        />
+                                        <p className="text-[10px] text-slate-400">
+                                            Cabecera PDF: {initials ? initials.split(',').join('.') + '.' : ''}
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-semibold text-slate-700">Censura Automática:</label>
+                                        <div className="flex gap-2">
+                                            <Input
+                                                placeholder="Ej: Nombre, Empresa"
+                                                className="bg-white"
+                                                value={keywords}
+                                                onChange={(e) => setKeywords(e.target.value)}
+                                            />
+                                            <Button onClick={handleKeywordSearch} variant="secondary" size="sm">
+                                                Buscar
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-lg text-sm text-blue-800 space-y-2">
+                                        <p className="font-semibold flex items-center gap-2">
+                                            <ShieldCheck size={14} /> Modo Manual
+                                        </p>
+                                        <ul className="list-disc list-inside space-y-1 text-xs opacity-80">
+                                            <li><strong>Click</strong> para ocultar texto.</li>
+                                            <li><strong>Arrastra</strong> para censurar áreas.</li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-slate-100 mt-auto">
+                                        <div className="flex justify-between items-center text-sm mb-4">
+                                            <span className="text-slate-500">Elementos:</span>
+                                            <Badge variant="secondary">{redactions.length}</Badge>
+                                        </div>
+                                        <Button className="w-full gap-2 shadow-lg shadow-blue-600/20" size="lg" onClick={handleProcess}>
+                                            Anonimizar PDF <ArrowRight size={16} />
+                                        </Button>
                                     </div>
                                 </div>
-                            </CardContent>
-                            <div className="p-6 pt-0 mt-auto">
-                                <Button className="w-full" size="lg" onClick={handleProcess}>
-                                    Anonimizar PDF
-                                </Button>
+
+                                {/* PDF Viewer Area */}
+                                <div className="lg:col-span-3 h-full bg-slate-200/50 relative">
+                                    <PDFViewer
+                                        file={file}
+                                        initialTextItems={textItems}
+                                        pages={pages}
+                                        onRedactionChange={setRedactions}
+                                    />
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => { setFile(null); setStep("upload"); }}
+                                        className="absolute top-4 right-4 bg-white/80 backdrop-blur hover:bg-white shadow-sm"
+                                    >
+                                        <X size={16} />
+                                    </Button>
+                                </div>
                             </div>
-                        </Card>
+                        )}
 
-                        {/* PDF VIEWER */}
-                        <div className="lg:col-span-3 h-full bg-slate-100 rounded-xl border overflow-hidden">
-                            <PDFViewer
-                                file={file}
-                                initialTextItems={textItems}
-                                pages={pages}
-                                onRedactionChange={setRedactions}
-                            />
-                        </div>
-                    </div>
-                )}
+                        {/* PROCESSING STEP */}
+                        {step === "processing" && (
+                            <div className="flex flex-col items-center justify-center p-12 space-y-4">
+                                <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
+                                <h3 className="text-xl font-medium text-slate-900">Aplicando censura...</h3>
+                                <p className="text-slate-500">Generando nuevo PDF seguro</p>
+                            </div>
+                        )}
 
-                {/* PROCESSING STEP */}
-                {step === "processing" && (
-                    <div className="flex flex-col items-center justify-center h-[50vh]">
-                        <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
-                        <h3 className="text-xl font-medium text-slate-900">Aplicando censura...</h3>
-                        <p className="text-slate-500">Generando nuevo PDF seguro</p>
-                    </div>
-                )}
+                        {/* DONE STEP */}
+                        {step === "done" && (
+                            <div className="text-center p-8 pt-10 flex flex-col items-center justify-center">
+                                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 ring-8 ring-green-50">
+                                    <CheckCircle className="h-8 w-8 text-green-600" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-slate-900 mb-2">¡Proceso Completado!</h2>
+                                <p className="text-slate-500 mb-8 max-w-sm mx-auto">
+                                    Se han detectado y ocultado <Badge variant="secondary" className="mx-1">{redactions.length}</Badge> elementos sensibles en tu documento.
+                                </p>
 
-                {/* DONE STEP */}
-                {step === "done" && (
-                    <div className="max-w-md mx-auto mt-12 text-center">
-                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <CheckCircle className="w-10 h-10 text-green-600" />
-                        </div>
-                        <h2 className="text-3xl font-bold text-slate-900 mb-4">¡Listo!</h2>
-                        <p className="text-slate-500 mb-8">
-                            Tu documento ha sido anonimizado correctamente. Se han ocultado {redactions.length} elementos.
-                        </p>
-
-                        <div className="space-y-3">
-                            <Button className="w-full" size="lg" onClick={handleDownload}>
-                                <Download className="mr-2 h-4 w-4" /> Descargar PDF
-                            </Button>
-                            <Button variant="outline" className="w-full" onClick={() => window.location.reload()}>
-                                Procesar otro archivo
-                            </Button>
-                        </div>
-                    </div>
-                )}
-
+                                <div className="grid gap-3 w-full max-w-sm">
+                                    <Button onClick={handleDownload} size="lg" className="w-full gap-2 bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-600/20">
+                                        <Download size={18} /> Descargar PDF Protegido
+                                    </Button>
+                                    <Button variant="outline" onClick={() => { setFile(null); setStep("upload"); }}>
+                                        Procesar otro archivo
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </Card>
+                </div>
             </div>
+
+            {/* Footer */}
+            <footer className="py-8 border-t border-slate-200 bg-white">
+                <div className="container max-w-6xl mx-auto px-4 text-center text-sm text-slate-500">
+                    © 2026 EquaCV. Todos los derechos reservados.
+                </div>
+            </footer>
         </main>
     );
 }
