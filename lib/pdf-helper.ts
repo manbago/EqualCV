@@ -190,7 +190,8 @@ export async function generateAnonymizedPDF(
         });
 
         // Draw Header
-        const headerY = newPageHeight - 70;
+        const headerBaseline = imgDisplayHeight + 20; // Bottom alignment for secondary text
+        const headerMainBaseline = imgDisplayHeight + 40; // Main baseline for headers
 
         // Draw Initials on the right
         if (formattedInitials) {
@@ -198,7 +199,7 @@ export async function generateAnonymizedPDF(
             const initialsWidth = helveticaBold.widthOfTextAtSize(formattedInitials, initialsSize);
             newPage.drawText(formattedInitials, {
                 x: imgDisplayWidth - initialsWidth - 20,
-                y: newPageHeight - 40,
+                y: imgDisplayHeight + 35,
                 size: initialsSize,
                 font: helveticaBold,
                 color: rgb(0, 0, 0)
@@ -207,7 +208,7 @@ export async function generateAnonymizedPDF(
 
         newPage.drawText("CV Anonimizado", {
             x: 200,
-            y: newPageHeight - 35,
+            y: imgDisplayHeight + 45,
             size: 18,
             font: helveticaBold,
             color: rgb(0.2, 0.2, 0.2)
@@ -215,25 +216,26 @@ export async function generateAnonymizedPDF(
 
         newPage.drawText("Candidata/o en proceso de selección", {
             x: 200,
-            y: newPageHeight - 55,
+            y: imgDisplayHeight + 25,
             size: 11,
             font: helveticaFont,
             color: rgb(0.5, 0.5, 0.5)
         });
 
         // Logo
+        const logoY = imgDisplayHeight + 15;
         if (showGenericLogo) {
             // Logo Placeholder
             newPage.drawRectangle({
                 x: 20,
-                y: headerY,
+                y: logoY,
                 width: 150,
                 height: 50,
                 color: rgb(0.9, 0.9, 0.9)
             });
             newPage.drawText("LOGO", {
                 x: 70,
-                y: headerY + 20,
+                y: logoY + 20,
                 size: 12,
                 font: helveticaFont,
                 color: rgb(0.5, 0.5, 0.5)
@@ -265,7 +267,7 @@ export async function generateAnonymizedPDF(
                 const dims = logoImage.scaleToFit(150, 50);
                 newPage.drawImage(logoImage, {
                     x: 20,
-                    y: headerY + (50 - dims.height) / 2,
+                    y: logoY + (50 - dims.height) / 2,
                     width: dims.width,
                     height: dims.height,
                 });
@@ -275,7 +277,7 @@ export async function generateAnonymizedPDF(
                 // Visible fallback in PDF to indicate error during development
                 newPage.drawRectangle({
                     x: 20,
-                    y: headerY,
+                    y: logoY,
                     width: 150,
                     height: 50,
                     color: rgb(0.95, 0.95, 0.95),
@@ -284,7 +286,7 @@ export async function generateAnonymizedPDF(
                 });
                 newPage.drawText("Error logo", {
                     x: 45,
-                    y: headerY + 20,
+                    y: logoY + 20,
                     size: 10,
                     font: helveticaFont,
                     color: rgb(0.8, 0.2, 0.2)

@@ -222,7 +222,7 @@ export default function HomeClient({ new_showPhotoStatus, showGenericLogo }: Hom
 
                                 <div className="grid gap-3 w-full max-w-sm">
                                     <Button onClick={handleDownload} size="lg" className="w-full gap-2 bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-600/20">
-                                        <Download size={18} /> Descargar PDF Protegido
+                                        <Download size={18} /> Descargar PDF anonimizado
                                     </Button>
                                     <Button variant="outline" onClick={() => { setFile(null); setStep("upload"); }}>
                                         Procesar otro archivo
