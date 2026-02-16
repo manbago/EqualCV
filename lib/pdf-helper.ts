@@ -76,7 +76,8 @@ export async function analyzePdf(file: File): Promise<{ textItems: TextItem[], p
 export async function generateAnonymizedPDF(
     originalFile: File,
     redactions: BoundingBox[],
-    initials: string = ""
+    initials: string = "",
+    showGenericLogo: boolean = true
 ): Promise<Uint8Array> {
     // Dynamic import
     const pdfjsLib = await import("pdfjs-dist");
@@ -220,21 +221,48 @@ export async function generateAnonymizedPDF(
             color: rgb(0.5, 0.5, 0.5)
         });
 
-        // Logo Placeholder
-        newPage.drawRectangle({
-            x: 20,
-            y: headerY,
-            width: 150,
-            height: 50,
-            color: rgb(0.9, 0.9, 0.9)
-        });
-        newPage.drawText("LOGO", {
-            x: 70,
-            y: headerY + 20,
-            size: 12,
-            font: helveticaFont,
-            color: rgb(0.5, 0.5, 0.5)
-        });
+        // Logo
+        if (showGenericLogo) {
+            // Logo Placeholder
+            newPage.drawRectangle({
+                x: 20,
+                y: headerY,
+                width: 150,
+                height: 50,
+                color: rgb(0.9, 0.9, 0.9)
+            });
+            newPage.drawText("LOGO", {
+                x: 70,
+                y: headerY + 20,
+                size: 12,
+                font: helveticaFont,
+                color: rgb(0.5, 0.5, 0.5)
+            });
+        } else {
+            try {
+                const logoUrl = '/logo.png';
+                const logoBytes = await fetch(logoUrl).then(res => res.arrayBuffer());
+                const logoImage = await newPdfDoc.embedPng(logoBytes);
+
+                const dims = logoImage.scaleToFit(150, 50);
+                newPage.drawImage(logoImage, {
+                    x: 20,
+                    y: headerY + (50 - dims.height) / 2,
+                    width: dims.width,
+                    height: dims.height,
+                });
+            } catch (error) {
+                console.error("Error loading logo.png:", error);
+                // Fallback to placeholder if image fails
+                newPage.drawRectangle({
+                    x: 20,
+                    y: headerY,
+                    width: 150,
+                    height: 50,
+                    color: rgb(0.9, 0.9, 0.9)
+                });
+            }
+        }
     }
 
     // Set Metadata
