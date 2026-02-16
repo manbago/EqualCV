@@ -12,11 +12,10 @@ import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
 
 interface HomeClientProps {
-    new_showPhotoStatus: boolean;
     showGenericLogo: boolean;
 }
 
-export default function HomeClient({ new_showPhotoStatus, showGenericLogo }: HomeClientProps) {
+export default function HomeClient({ showGenericLogo }: HomeClientProps) {
     const [file, setFile] = useState<File | null>(null);
     const [step, setStep] = useState<"upload" | "analyzing" | "review" | "processing" | "done">("upload");
 
