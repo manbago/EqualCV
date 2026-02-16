@@ -240,9 +240,27 @@ export async function generateAnonymizedPDF(
             });
         } else {
             try {
-                const logoUrl = '/logo.png';
-                const logoBytes = await fetch(logoUrl).then(res => res.arrayBuffer());
-                const logoImage = await newPdfDoc.embedPng(logoBytes);
+                // Use absolute URL if possible to avoid issues with some browsers/environments
+                const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+                const logoUrl = `${baseUrl}/logo.png`;
+
+                const response = await fetch(logoUrl);
+                if (!response.ok) throw new Error(`Failed to fetch logo: ${response.statusText}`);
+
+                const logoBytes = await response.arrayBuffer();
+                let logoImage;
+
+                try {
+                    // Try PNG first
+                    logoImage = await newPdfDoc.embedPng(logoBytes);
+                } catch (pngError) {
+                    // Fallback to JPG
+                    try {
+                        logoImage = await newPdfDoc.embedJpg(logoBytes);
+                    } catch (jpgError) {
+                        throw new Error('Image format not supported (must be PNG or JPG)');
+                    }
+                }
 
                 const dims = logoImage.scaleToFit(150, 50);
                 newPage.drawImage(logoImage, {
@@ -253,13 +271,23 @@ export async function generateAnonymizedPDF(
                 });
             } catch (error) {
                 console.error("Error loading logo.png:", error);
-                // Fallback to placeholder if image fails
+
+                // Visible fallback in PDF to indicate error during development
                 newPage.drawRectangle({
                     x: 20,
                     y: headerY,
                     width: 150,
                     height: 50,
-                    color: rgb(0.9, 0.9, 0.9)
+                    color: rgb(0.95, 0.95, 0.95),
+                    borderColor: rgb(0.8, 0.2, 0.2),
+                    borderWidth: 1
+                });
+                newPage.drawText("Error logo", {
+                    x: 45,
+                    y: headerY + 20,
+                    size: 10,
+                    font: helveticaFont,
+                    color: rgb(0.8, 0.2, 0.2)
                 });
             }
         }
