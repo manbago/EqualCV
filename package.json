@@ -16,6 +16,7 @@
   "dependencies": {
     "@flags-sdk/vercel": "^1.0.1",
     "@radix-ui/react-slot": "^1.2.4",
+    "@supabase/supabase-js": "^2.96.0",
     "@tailwindcss/postcss": "^4.1.18",
     "clsx": "^2.1.1",
     "flags": "^4.0.3",

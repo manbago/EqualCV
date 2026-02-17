@@ -10,6 +10,7 @@ import { analyzePdf, generateAnonymizedPDF, TextItem, PageInfo, BoundingBox } fr
 import { Loader2, Download, CheckCircle, ArrowRight, ShieldCheck, X } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
+import { logFileProcessed } from "@/app/actions";
 
 interface HomeClientProps {
     showGenericLogo: boolean;
@@ -56,6 +57,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
         try {
             const pdfBytes = await generateAnonymizedPDF(file, redactions, initials, showGenericLogo);
             setFinalPdf(pdfBytes);
+            await logFileProcessed(file.name);
             setStep("done");
         } catch (error) {
             console.error(error);
