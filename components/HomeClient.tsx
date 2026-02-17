@@ -104,7 +104,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                     </div>
                 )}
 
-                <div className={`w-full ${step === "review" ? "max-w-7xl h-[80vh]" : "max-w-xl"} animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200`}>
+                <div className={`w-full ${step === "review" ? "max-w-[95vw] h-[85vh]" : "max-w-xl"} animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200`}>
                     <Card className="border-slate-200/60 shadow-xl shadow-slate-200/40 overflow-hidden backdrop-blur-sm bg-white/80 h-full flex flex-col">
 
                         {/* UPLOAD STEP */}
