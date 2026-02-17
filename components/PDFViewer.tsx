@@ -15,7 +15,7 @@ interface PDFViewerProps {
 
 export default function PDFViewer({ file, initialTextItems, pages, onRedactionChange }: PDFViewerProps) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [scale, setScale] = useState(1.0);
+    const [scale, setScale] = useState(1.2);
     const [redactions, setRedactions] = useState<BoundingBox[]>([]);
     const [manualSelection, setManualSelection] = useState<{ start: { x: number, y: number }, end: { x: number, y: number }, pageIndex: number } | null>(null);
 
@@ -117,7 +117,7 @@ export default function PDFViewer({ file, initialTextItems, pages, onRedactionCh
     };
 
     return (
-        <div className="flex flex-col items-center gap-8 w-full h-full bg-slate-200/30 p-8 overflow-auto" ref={containerRef}>
+        <div className="flex flex-col items-center gap-8 w-fit min-w-full min-h-full bg-slate-200/30 py-8 px-2 md:px-16" ref={containerRef}>
             {file && pages.map((page) => (
                 <div key={page.index} className="relative shadow-lg ring-1 ring-black/5 bg-white">
                     <PDFPage

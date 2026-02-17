@@ -85,7 +85,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
             <Header />
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col items-center justify-center pt-0 pb-12 px-4 w-full relative">
+            <div className="flex-1 flex flex-col items-center justify-center pt-0 pb-6 px-4 w-full relative">
 
                 {/* Background Gradients */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
@@ -104,7 +104,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                     </div>
                 )}
 
-                <div className={`w-full ${step === "review" ? "max-w-7xl h-[80vh]" : "max-w-xl"} animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200`}>
+                <div className={`${step === "review" ? "w-fit max-w-[95vw] h-[82vh]" : "w-full max-w-xl"} animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200`}>
                     <Card className="border-slate-200/60 shadow-xl shadow-slate-200/40 overflow-hidden backdrop-blur-sm bg-white/80 h-full flex flex-col">
 
                         {/* UPLOAD STEP */}
@@ -136,18 +136,18 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
 
                         {/* REVIEW STEP */}
                         {step === "review" && (
-                            <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-0 min-h-[700px] h-[calc(100vh-220px)] overflow-hidden border border-slate-200 rounded-xl">
+                            <div className="flex-1 flex flex-col lg:flex-row overflow-hidden border border-slate-200 rounded-xl">
                                 {/* Side Controls */}
-                                <div className="lg:col-span-1 border-r border-slate-100 p-6 flex flex-col space-y-6 overflow-y-auto bg-slate-50/30">
+                                <div className="w-full lg:w-80 shrink-0 border-r border-slate-100 p-6 flex flex-col space-y-6 overflow-y-auto bg-slate-50/30">
                                     <div className="space-y-1">
                                         <h3 className="text-lg font-bold text-slate-900">Configuración</h3>
                                         <p className="text-xs text-slate-500">Define qué datos ocultar</p>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-slate-700">Iniciales:</label>
+                                        <label className="text-sm font-semibold text-slate-700">Iniciales candidata/o</label>
                                         <Input
-                                            placeholder="Ej: M,B,C"
+                                            placeholder="M,B,C"
                                             value={initials}
                                             className="bg-white"
                                             onChange={(e) => {
@@ -167,13 +167,13 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                                         </p>
                                         <ul className="list-disc list-inside space-y-1 text-xs opacity-80">
                                             <li><strong>Click</strong> para ocultar texto.</li>
-                                            <li><strong>Arrastra</strong> para censurar áreas.</li>
+                                            <li><strong>Arrastra</strong> para ocultar áreas.</li>
                                         </ul>
                                     </div>
 
                                     <div className="pt-4 border-t border-slate-100 mt-auto">
                                         <div className="flex justify-between items-center text-sm mb-4">
-                                            <span className="text-slate-500">Elementos:</span>
+                                            <span className="text-slate-500">Elementos marcados</span>
                                             <Badge variant="secondary">{redactions.length}</Badge>
                                         </div>
                                         <Button className="w-full gap-2 shadow-lg shadow-blue-600/20" size="lg" onClick={handleProcess}>
@@ -183,7 +183,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                                 </div>
 
                                 {/* PDF Viewer Area */}
-                                <div className="lg:col-span-3 h-full bg-slate-200/50 relative overflow-hidden">
+                                <div className="flex-1 bg-slate-200/50 relative overflow-auto min-w-0">
                                     <PDFViewer
                                         file={file}
                                         initialTextItems={textItems}
@@ -237,7 +237,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
             </div>
 
             {/* Footer */}
-            <footer className="py-8 border-t border-slate-200 bg-white">
+            <footer className="py-4 border-t border-slate-200 bg-white">
                 <div className="container max-w-6xl mx-auto px-4 text-center text-sm text-slate-500">
                     © 2026 EqualCV. Todos los derechos reservados.
                 </div>
