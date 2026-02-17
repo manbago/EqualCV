@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import FeedbackModal from "./FeedbackModal";
 import FileUploader from "@/components/FileUploader";
 import PDFViewer from "@/components/PDFViewer";
 import { Button } from "@/components/ui/button";
@@ -242,6 +243,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                     © 2026 EqualCV. Todos los derechos reservados.
                 </div>
             </footer>
+            <FeedbackModal />
         </main>
     );
 }
