@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google"; // Use alias if needed or direct import
 import "./globals.css";
@@ -27,6 +28,7 @@ export default function RootLayout({
                 )}
             >
                 {children}
+                <Analytics />
             </body>
         </html>
     );
