@@ -66,7 +66,7 @@ export default function FeedbackModal() {
                 >
                     <div className="bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-2xl relative whitespace-nowrap">
                         <p className="text-sm font-bold">🐛 ¿Has visto un bug?</p>
-                        <p className="text-xs text-slate-300 mt-0.5">¡Cazalo y cuéntamelo!</p>
+                        <p className="text-xs text-slate-300 mt-0.5">¡Cázalo y cuéntamelo!</p>
                         {/* Arrow */}
                         <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-slate-900 transform rotate-45"></div>
                     </div>
