@@ -5,14 +5,14 @@ export function Header() {
     return (
         <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/75 backdrop-blur supports-[backdrop-filter]:bg-white/60">
             <div className="container flex h-16 items-center justify-between mx-auto px-4 max-w-6xl">
-                <div className="flex items-center gap-2">
+                <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
                         <ShieldCheck className="h-5 w-5 text-white" />
                     </div>
                     <span className="text-lg font-bold tracking-tight text-slate-900">
                         Equa<span className="text-blue-600 animate-cursor-blink font-extrabold">|</span>CV
                     </span>
-                </div>
+                </a>
 
                 <div className="flex items-center gap-4">
                     <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
