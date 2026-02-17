@@ -57,6 +57,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
         try {
             const pdfBytes = await generateAnonymizedPDF(file, redactions, initials, showGenericLogo);
             setFinalPdf(pdfBytes);
+            setFinalPdf(pdfBytes);
             await logFileProcessed(file.name);
             setStep("done");
         } catch (error) {

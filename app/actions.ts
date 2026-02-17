@@ -15,10 +15,13 @@ export async function logFileProcessed(filename: string) {
 
         if (error) {
             console.error('Error logging file processing:', error);
-            throw error;
+            // We return success: false but don't throw to avoid breaking the UI flow
+            return { success: false, error: error.message };
         }
+
+        return { success: true };
     } catch (error) {
         console.error('Failed to log file processing:', error);
-        // We don't want to fail the user request if logging fails, so we just log the error
+        return { success: false, error: 'Unexpected error' };
     }
 }
