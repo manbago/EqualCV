@@ -112,7 +112,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                         {step === "upload" && (
                             <>
                                 <CardHeader>
-                                    <CardTitle className="font-medium">Subir Documento</CardTitle>
+                                    <CardTitle className="font-medium">Cargar Documento</CardTitle>
                                     <CardDescription className="font-normal text-slate-400">Formatos soportados: PDF (Máx 10MB)</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-6">
