@@ -33,6 +33,17 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
     const [finalPdf, setFinalPdf] = useState<Uint8Array | null>(null);
 
     const handleFileSelect = async (selectedFile: File) => {
+        // Validate: file must have content. Cloud files (Dropbox, OneDrive) not yet
+        // downloaded locally show as 0 bytes and cannot be processed.
+        if (selectedFile.size === 0) {
+            alert(
+                "El archivo parece estar vacío o no está disponible localmente.\n\n" +
+                "Si el archivo está en la nube (Dropbox, OneDrive, Google Drive...), " +
+                "descárgalo primero a tu dispositivo y vuelve a intentarlo."
+            );
+            return;
+        }
+
         setFile(selectedFile);
         setStep("analyzing");
 

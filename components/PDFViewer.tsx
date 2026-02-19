@@ -143,7 +143,7 @@ export default function PDFViewer({ file, initialTextItems, pages, onRedactionCh
                             .map((item, idx) => {
                                 // Conversion: PDF (bottom-left) -> CSS (top-left)
                                 // y in PDF is from bottom. CSS top = pageHeight - y - height
-                                const isRedacted = redactions.some(r => r.x === item.x && r.y === item.y && r.type === 'text');
+                                const isRedacted = redactions.some(r => r.x === item.x && r.y === item.y && r.pageIndex === item.pageIndex && r.type === 'text');
 
                                 return (
                                     <div
