@@ -11,7 +11,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-    title: "AnonimiCV - Professional CV Anonymizer",
+    title: "EqualCV - Professional CV Anonymizer",
     description: "Secure, client-side CV anonymization tool.",
 };
 
