@@ -205,7 +205,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => { setFile(null); setStep("upload"); }}
+                                        onClick={() => { setFile(null); setStep("upload"); setInitials(""); setRedactions([]); }}
                                         className="absolute top-4 right-4 bg-white/80 backdrop-blur hover:bg-white shadow-sm"
                                     >
                                         <X size={16} />
@@ -238,7 +238,7 @@ export default function HomeClient({ showGenericLogo }: HomeClientProps) {
                                     <Button onClick={handleDownload} size="lg" className="w-full gap-2 bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-600/20">
                                         <Download size={18} /> Descargar PDF anonimizado
                                     </Button>
-                                    <Button variant="outline" onClick={() => { setFile(null); setStep("upload"); }}>
+                                    <Button variant="outline" onClick={() => { setFile(null); setStep("upload"); setInitials(""); setRedactions([]); }}>
                                         Procesar otro archivo
                                     </Button>
                                 </div>
